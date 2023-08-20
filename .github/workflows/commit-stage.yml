@@ -16,6 +16,13 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: gradle
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Build, unit tests and integration tests
+        run: |
+          cd catalog-service
+          chmod +x gradlew
+          ./gradlew build
       - name: Code vulnerability scanning
         uses: anchore/scan-action@v3
         id: scan
@@ -29,8 +36,3 @@ jobs:
         if: success() || failure()
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
-      - name: Build, unit tests and integration tests
-        run: |
-          cd catalog-service
-          chmod +x gradlew
-          ./gradlew build
